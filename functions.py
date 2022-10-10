@@ -3,10 +3,7 @@ import getpass
 from subprocess import run
 from sys import exit
 from time import sleep
-from programs import OS, distro, debian, fedora, rocky, arch, opensuse, freebsd
-from programs import dpv, fpv, apv, opv, bpv
-
-
+from programs import *
 
 
 def Backup():
@@ -16,7 +13,7 @@ def Backup():
 
 			run(['mkdir /tmp/Backup/ && mkdir /tmp/Backup/etc/ && mkdir /tmp/Backup/usr'], shell=True, check=True)
 
-			print('\n\t NGINX settings, Apache, the mariaDB database, letsencrypt SSL certs, \n\t and the postfix configs will be backed up.\n')
+			print('\n\t NGINX settings, Apache, the mariaDB database, letsencrypt SSL certs, \n\t and the postfix configxs will be backed up.\n')
 			print('\t Is this something you wanted to do?\n')
 			print('\t 1: Yes')
 			print('\t 2: No\n')
@@ -31,9 +28,7 @@ def Backup():
 				
 				if distro[0 or 1] in OS:
 					run([dpv], shell=True, check=True)
-				elif distro[2] in OS:
-					run([fpv], shell=True, check=True)
-				elif distro[3] in OS:
+				elif distro[2 or 3] in OS:
 					run([fpv], shell=True, check=True)
 				elif distro[4] in OS:
 					run([apv], shell=True, check=True)
