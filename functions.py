@@ -9,7 +9,12 @@ from programs import *
 def Backup():
 	while True:
 
+			# Cleans up the /tmp/Backup/ directory incase the script was executed without fully completing.
+
+			run(['cd /tmp/ && rm -rf Backup/'], shell=True, check=True)
+			
 			# Create a temporary directory that will be used throughout the script.
+
 
 			run(['mkdir /tmp/Backup/ && mkdir /tmp/Backup/etc/ && mkdir /tmp/Backup/usr'], shell=True, check=True)
 
