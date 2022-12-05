@@ -1,4 +1,4 @@
-import getpass
+import getpass, os
 
 from subprocess import run
 from sys import exit
@@ -45,7 +45,7 @@ def Backup():
 
 		# Start the backup process of the mariaDB database.
 		
-		print('\n\t Backup initiated, please wait...\n')
+		print('\n\t Backup initiated, this may take a bit and is active, please wait...\n')
 
 		run(['cd /tmp/Backup && mysqldump --user=' + userName + ' --password=' + passWord + ' --lock-tables --all-databases > server_db_backup.sql'], shell=True, check=True)
 
@@ -70,10 +70,10 @@ def Backup():
 
 		print('\t The website has been backed up! Compressing files...\n\t')
 
-		# Compresses the /tmp/Backup/ folder for RSYNC later on.
+		# Dates and compresses the /tmp/Backup/ folder for RSYNC later on, then removes the temporary /tmp/Backup/ folder.
 
-		#run(['cd /tmp/ && sudo tar -zcvf "ServerBackup.tar.gz" /tmp/Backup '], shell=True, check=True)
-		run(["cd /tmp/ && sudo tar cf - /tmp/Backup -P | pv -s $(sudo du -sb /tmp/Backup | awk '{print $1}') | gzip > ServerBackup.tar.gz"], shell=True, check=True)
+		run(["""cd /tmp/ && sudo tar -zcvf "$(date '+%Y-%m-%d').tar.gz" /tmp/Backup/"""], shell=True, check=True)
+
 		run(['cd /tmp/ && sudo rm -rf Backup/'], shell=True, check=True)
 
 		print('\n\t Backup has been completed, would you like to return to the main menu?\n')
@@ -120,11 +120,20 @@ def transferBackup():
 
 			run(['clear'], shell=True)
 
-			print('\n\t Attempting to rsync the file, please wait...\n\t')
-			
-			# Now we're going to take the input that we stored previously, and import them into the terminal command, so the user doesn't have to manually edit this source file.
+			print("\n\t Listing files to be RSYNC'd, please type out the full name...\n\t")
 
-			run(['cd /tmp/ && sudo rsync -av -P ServerBackup.tar.gz ' + userName + '@' + ipAddress + ':/tmp/'], shell=True, check=True)
+
+			# Here we're iterating over the /tmp/ directory and only listing the files with the .tar.gz extension.
+
+			for x in os.listdir("/tmp/"):
+				if x.endswith(".tar.gz"):
+					print(x)
+
+			dbBackupSelection = input('\n\t Please select the file you wish to transfer: ')
+
+			# Now we're going to RSYNC our selected file to the destination that we've chosen earlier.
+
+			run(['cd /tmp/ && sudo rsync -av -P ' + dbBackupSelection + ' ' + userName + '@' + ipAddress + ':/tmp/'], shell=True, check=True)
 
 			print('\t Rsync was successful! Would you like to return to the main menu?\n')
 			print('\t 1: Yes')
@@ -221,12 +230,22 @@ def restoreBackup():
 		print('\t Services have successfully been disabled. Attempting restoration, please wait...\n\t')
 		sleep(1.25)
 
+		# Here we're iterating over the /tmp/ directory and only listing the files with the .tar.gz extension.
+
+		for x in os.listdir("/tmp/"):
+			if x.endswith(".tar.gz"):
+				print(x)
+
+		dbBackupSelection = input('\n\t Please select the file you wish to restore: ')
+
+
 		# Here we're beginning to decompress the file we created, and moved, earlier. This contains everything we need to properly setup the new server.
 
 		print('\t Attempting to decompress the file, please wait...\n\t')
 		sleep(2)
 
-		run(['cd /tmp/ && sudo pv ServerBackup.tar.gz | tar -xz'], shell=True, check=True)
+		#run(['cd /tmp/ && sudo pv ServerBackup.tar.gz | tar -xz'], shell=True, check=True)
+		run(['cd /tmp/ && sudo pv ' + dbBackupSelection + ' | tar -xz'], shell=True, check=True)
 		sleep(3)
 		run(['clear'], shell=True)
 
