@@ -1,9 +1,30 @@
-import functions
+import functions, argparse
+
 
 from subprocess import run
 from sys import exit
 
+# Here we add CLI arguments for quick-and-easy execution instead of having to go through the menu.
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-b", "--Backup", action = "store_true", help = "Backs up the server.\n")
+parser.add_argument("-tb", "--Transfer", action = "store_true", help = "Transfers to a new server.\n")
+parser.add_argument("-s", "--Setup", action = "store_true", help = "Installs necessary files for the server. To see what's installed, view 'programs.py'.\n")
+parser.add_argument("-r", "--Restore", action = "store_true", help = "This restores the server, putting the files we've backed up, back into their proper directories.\n")
+args = parser.parse_args()
+
+# Here we're checking to see if any CLI arguments were passed before execution. If none were passed, then we follow through with the default state.
+
 try: 
+        if args.Backup:
+                functions.Backup()
+        elif args.Transfer:
+                functions.transferBackup()
+        elif args.Setup:
+                functions.serverSetup()
+        elif args.Restore:
+                functions.restoreBackup()
+
         while True:
 
                 run(['clear'], shell=True)
