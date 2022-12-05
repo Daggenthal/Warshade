@@ -11,7 +11,7 @@ def Backup():
 		
 		# Cleans up the /tmp/Backup/ directory incase the script was executed without fully completing.
 
-		run(['cd /tmp/ && rm -rf Backup/'], shell=True, check=True)
+		run(['cd /tmp/ && sudo rm -rf Backup/'], shell=True, check=True)
 	
 		# Create a temporary directory that will be used throughout the script.
 
@@ -387,4 +387,3 @@ def restoreBackup():
 
 				sleep(4)
 				break
-			
