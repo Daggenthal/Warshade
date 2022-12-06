@@ -120,20 +120,30 @@ def transferBackup():
 
 			run(['clear'], shell=True)
 
-			print("\n\t Listing files to be RSYNC'd, please type out the full name...\n\t")
+			# Get the list of files inside the /tmp/ directory
+			files = os.listdir('/tmp/')
 
+			# Print out a numbered list of files
+			for index, file in enumerate(files):
+				
+				if file.endswith(".tar.gz"):
+					print(f"{index+1}. {file}\n")
 
-			# Here we're iterating over the /tmp/ directory and only listing the files with the .tar.gz extension.
+			# Get the user's input
+			selection = int(input('Enter the number of the file you wish to select: '))
 
-			for x in os.listdir("/tmp/"):
-				if x.endswith(".tar.gz"):
-					print(x)
-
-			dbBackupSelection = input('\n\t Please select the file you wish to transfer: ')
+			# Check if the selection is valid
+			if selection > 0 and selection <= len(files):
+				
+				# Get the file name
+				output_file = files[selection-1]
+				
+			else:
+				print("Invalid selection")
 
 			# Now we're going to RSYNC our selected file to the destination that we've chosen earlier.
 
-			run(['cd /tmp/ && sudo rsync -av -P ' + dbBackupSelection + ' ' + userName + '@' + ipAddress + ':/tmp/'], shell=True, check=True)
+			run(['cd /tmp/ && sudo rsync -av -P ' + output_file + ' ' + userName + '@' + ipAddress + ':/tmp/'], shell=True, check=True)
 
 			print('\t Rsync was successful! Would you like to return to the main menu?\n')
 			print('\t 1: Yes')
@@ -230,14 +240,27 @@ def restoreBackup():
 		print('\t Services have successfully been disabled. Attempting restoration, please wait...\n\t')
 		sleep(1.25)
 
-		# Here we're iterating over the /tmp/ directory and only listing the files with the .tar.gz extension.
 
-		for x in os.listdir("/tmp/"):
-			if x.endswith(".tar.gz"):
-				print(x)
+		# Get the list of files inside the /tmp/ directory
+		files = os.listdir('/tmp/')
 
-		dbBackupSelection = input('\n\t Please select the file you wish to restore: ')
+		# Print out a numbered list of files
+		for index, file in enumerate(files):
+			
+			if file.endswith(".tar.gz"):
+				print(f"{index+1}. {file}\n")
 
+		# Get the user's input
+		selection = int(input('Enter the number of the file you wish to select: '))
+
+		# Check if the selection is valid
+		if selection > 0 and selection <= len(files):
+			
+			# Get the file name
+			output_file = files[selection-1]
+			
+		else:
+			print("Invalid selection")
 
 		# Here we're beginning to decompress the file we created, and moved, earlier. This contains everything we need to properly setup the new server.
 
@@ -245,7 +268,7 @@ def restoreBackup():
 		sleep(2)
 
 		#run(['cd /tmp/ && sudo pv ServerBackup.tar.gz | tar -xz'], shell=True, check=True)
-		run(['cd /tmp/ && sudo pv ' + dbBackupSelection + ' | tar -xz'], shell=True, check=True)
+		run(['cd /tmp/ && sudo pv ' + output_file + ' | tar -xz'], shell=True, check=True)
 		sleep(3)
 		run(['clear'], shell=True)
 
