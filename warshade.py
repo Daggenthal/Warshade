@@ -42,7 +42,7 @@ try:
                 run(['clear'], shell=True)
 
                 print('\t Welcome to Warshade! What would you like to do? \n')
-                print('\t 1: Full Website and Database Backup')
+                print('\t 1: Full Backup')
                 print('\t 2: Database Backup')
                 print('\t 3: Website / NGINX Backup')
                 print('\t 4: Transfer Backup')
