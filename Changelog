@@ -1,0 +1,16 @@
+Changelog
+
+-----------------------
+
+** DEC-26-2022 ** 
+
+1) Changelog created
+
+2) Renamed the functions >Backup()< and >Restore()< to >fullBackup()< and >fullRestore()<
+
+3) Added the ability to fully backup and restore these individually:
+
+                                                                    MariaDB
+                                                                    Website + NGINX + Certs needed
+
+-----------------------
