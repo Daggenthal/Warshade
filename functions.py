@@ -251,7 +251,7 @@ def webBackup():
 
 		# Moves the folder we've created to the /tmp/ directory to be cleared whenever the server is rebooted, or when /tmp/ is usually cleared.
 
-		run(['cd /tmp/ && rm -rf /tmp/Backup/'])
+		run(['cd /tmp/ && sudo rm -rf Backup/'])
 
 		# Clear the terminal and tell the user that the operation finished.
 
