@@ -205,7 +205,7 @@ def dbRestore():
 
 				# Tell the user that nothing was found.
 
-				print('\n\t No files with the .sql extension were -\n\t -found in /tmp/, please move some there.\n')
+				print('\n\t No files with the .sql extension were -\n\t - found in /tmp/, or the program was exited.\n')
 				exit()
 
 
@@ -454,7 +454,7 @@ def webRestore():
 		except:
 
 			run(['clear'], shell=True)
-			print('\n\t No _website.tar.gz files were located in /tmp/, aborting...')
+			print('\n\t No _website.tar.gz files were located in /tmp/, or the user exited the program, aborting...')
 			sleep(5)
 			exit()
 
