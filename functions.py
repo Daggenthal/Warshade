@@ -109,7 +109,7 @@ def dbBackup():
 
 		# Print out that we are initializing the backup, and tell the user where it will be located.
 
-		print('\n\t The DB backup will be stored in /home/$USER/Documents/\n\t Please wait, as depending on the size of the DB, this may seem inactive...')
+		print('\n\t The DB backup will be stored in /tmp/\n\t Please wait, as depending on the size of the DB, this may seem inactive...')
 		sleep(1.25)
 
 		# Use the information we've gathered earlier, and CD into the specific user directory that this is being ran inside of. If we did this in /tmp/, we'd have to make a folder there and constantly check for it.
@@ -120,7 +120,7 @@ def dbBackup():
 
 			try:
 
-				run(["cd /home/$USER/Documents && mysqldump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
+				run(["cd /tmp/ && mysqldump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
 
 				# Clear the screen upon completion, and tell the user that it has finished successfully.
 
@@ -145,55 +145,68 @@ def dbRestore():
 
 		run(['clear'], shell=True)
 
-		print('Scanning the /home/$USER/Documents directory for any databases...')
-		sleep(1.5)
+		print('Scanning the /tmp/ directory for any databases...')
+		sleep(1)
 		run(['clear'], shell=True)
 		
 		# Now we will search the specified location for .sql files, and if none are found, exit. If they are found, allow the user to select them and restore the database with it.
 
 		while True:
 
-			# Get the list of files inside the /home/$USER/Documents/ directory
+			try:
 
-			files = os.listdir('/home/$USER/Documents/')
+				# Get the list of files inside the /home/$USER/Documents/ directory
 
-			# Print out a numbered list of files
+				files = os.listdir('/tmp/')
 
-			for index, file in enumerate(files):
+				# Print out a numbered list of files
+
+				for index, file in enumerate(files):
+					
+					if file.endswith(".sql"):
+						print(f"{index+1}. {file}\n")
+
+				# Get the user's input
+
+				selection = int(input('Enter the number of the file you wish to select: '))
+
+				# Check if the selection is valid
+
+				if selection > 0 and selection <= len(files):
+					
+					# Get the file name
+
+					output_file = files[selection-1]
+					
+				else:
+					print("Invalid selection")
 				
-				if file.endswith(".sql"):
-					print(f"{index+1}. {file}\n")
+				# Grab the DB Username we will use to force the DB to be restored.
 
-			# Get the user's input
+				userName = input('\n\t Please input your MariaDB Username: ')
 
-			selection = int(input('Enter the number of the file you wish to select: '))
-
-			# Check if the selection is valid
-
-			if selection > 0 and selection <= len(files):
+				# Force the restoration by inputting the username, asking a password, and pushing through the file we've selected.
 				
-				# Get the file name
+				run(['sudo mysql --user ' + userName + ' --password --force < ' + output_file], shell=True, check=True)
 
-				output_file = files[selection-1]
-				
-			else:
-				print("Invalid selection")
-			
-			# Grab the DB Username we will use to force the DB to be restored.
+				# Clear the shell and print out that it was successful.
 
-			userName = input('\n\t Please input your MariaDB Username: ')
+				run(['clear'], shell=True)
 
-			# Force the restoration by inputting the username, asking a password, and pushing through the file we've selected.
-			
-			run(['sudo mysql --user ' + userName + ' --password --force < ' + output_file], shell=True, check=True)
+				print('\n\t The Database was properly restored! Exiting now...')
+				sleep(1.5)
+				exit()
 
-			# Clear the shell and print out that it was successful.
+			except:
 
-			run(['clear'], shell=True)
+				# Clear the terminal.
 
-			print('\n\t The Database was properly restored! Exiting now...')
-			sleep(1.5)
-			exit()
+				run(['clear'], shell=True)
+
+				# Tell the user that nothing was found.
+
+				print('\n\t No files with the .sql extension were -\n\t -found in /tmp/, please move some there.\n')
+				exit()
 
 
 
@@ -238,7 +251,7 @@ def webBackup():
 
 		# Moves the folder we've created to the /tmp/ directory to be cleared whenever the server is rebooted, or when /tmp/ is usually cleared.
 
-		run(['cd /home/$USER/Documents && mv webBackup/ /tmp/'])
+		run(['cd /tmp/ && rm -rf /tmp/Backup/'])
 
 		# Clear the terminal and tell the user that the operation finished.
 
@@ -259,7 +272,7 @@ def webRestore():
 
 		run(['clear'], shell=True)
 		print('\n\t Scanning the /tmp/ directory for files...')
-		sleep(1.5)
+		sleep(1)
 		run(['clear'], shell=True)
 
 		try:
