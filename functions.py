@@ -100,7 +100,7 @@ def dbBackup():
 
 		# Print on the screen that the backup is being initiated
 
-		print('\n\t Full MariaDB backup initiated...')
+		print('\n\t MariaDB backup initiated...')
 
 		# Ask for the Username and Password, storing those into 2 variables we've aptly created.
 
