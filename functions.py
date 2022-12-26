@@ -146,16 +146,18 @@ def dbRestore():
 		run(['clear'], shell=True)
 
 		print('Scanning the /home/$USER/Documents directory for any databases...')
-
+		sleep(1.5)
+		run(['clear'], shell=True)
+		
 		# Now we will search the specified location for .sql files, and if none are found, exit. If they are found, allow the user to select them and restore the database with it.
 
 		while True:
 
 			try:
 
-				# Get the list of files inside the /tmp/ directory
+				# Get the list of files inside the /home/$USER/Documents/ directory
 
-				files = os.listdir('/home/$USER/Documents')
+				files = os.listdir('/home/$USER/Documents/')
 
 				# Print out a numbered list of files
 
@@ -203,7 +205,7 @@ def dbRestore():
 
 				# Tell the user that nothing was found.
 
-				print('\n\t No files were found in /home/$USER/Documents, please move some there')
+				print('\n\t No files with the .sql extension were\n\t found in /home/$USER/Documents, please move some there.\n')
 				exit()
 
 
