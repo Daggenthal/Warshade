@@ -153,60 +153,47 @@ def dbRestore():
 
 		while True:
 
-			try:
+			# Get the list of files inside the /home/$USER/Documents/ directory
 
-				# Get the list of files inside the /home/$USER/Documents/ directory
+			files = os.listdir('/home/$USER/Documents/')
 
-				files = os.listdir('/home/$USER/Documents/')
+			# Print out a numbered list of files
 
-				# Print out a numbered list of files
-
-				for index, file in enumerate(files):
-					
-					if file.endswith(".sql"):
-						print(f"{index+1}. {file}\n")
-
-				# Get the user's input
-
-				selection = int(input('Enter the number of the file you wish to select: '))
-
-				# Check if the selection is valid
-
-				if selection > 0 and selection <= len(files):
-					
-					# Get the file name
-
-					output_file = files[selection-1]
-					
-				else:
-					print("Invalid selection")
+			for index, file in enumerate(files):
 				
-				# Grab the DB Username we will use to force the DB to be restored.
+				if file.endswith(".sql"):
+					print(f"{index+1}. {file}\n")
 
-				userName = input('\n\t Please input your MariaDB Username: ')
+			# Get the user's input
 
-				# Force the restoration by inputting the username, asking a password, and pushing through the file we've selected.
+			selection = int(input('Enter the number of the file you wish to select: '))
+
+			# Check if the selection is valid
+
+			if selection > 0 and selection <= len(files):
 				
-				run(['sudo mysql --user ' + userName + ' --password --force < ' + output_file], shell=True, check=True)
+				# Get the file name
 
-				# Clear the shell and print out that it was successful.
+				output_file = files[selection-1]
+				
+			else:
+				print("Invalid selection")
+			
+			# Grab the DB Username we will use to force the DB to be restored.
 
-				run(['clear'], shell=True)
+			userName = input('\n\t Please input your MariaDB Username: ')
 
-				print('\n\t The Database was properly restored! Exiting now...')
-				sleep(1.5)
-				exit()
+			# Force the restoration by inputting the username, asking a password, and pushing through the file we've selected.
+			
+			run(['sudo mysql --user ' + userName + ' --password --force < ' + output_file], shell=True, check=True)
 
-			except:
+			# Clear the shell and print out that it was successful.
 
-				# Clear the terminal.
+			run(['clear'], shell=True)
 
-				run(['clear'], shell=True)
-
-				# Tell the user that nothing was found.
-
-				print('\n\t No files with the .sql extension were\n\t found in /home/$USER/Documents, please move some there.\n')
-				exit()
+			print('\n\t The Database was properly restored! Exiting now...')
+			sleep(1.5)
+			exit()
 
 
 
