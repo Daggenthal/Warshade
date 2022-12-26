@@ -126,12 +126,14 @@ def dbBackup():
 
 				run(["clear"], shell=True)
 				print('\n\t The Database was successfully backed up. The default location is in /home/$USER/Documents/')
+				exit()
 
 			except:
 
 				# Display why an issue may've occurred.
 
 				print('\n\t The Database was unable to be backed up properly. Please read the error above to try and correct it.')
+				exit()
 
 
 
@@ -202,6 +204,7 @@ def dbRestore():
 				# Tell the user that nothing was found.
 
 				print('\n\t No files were found in /home/$USER/Documents, please move some there')
+				exit()
 
 
 
