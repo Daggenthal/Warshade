@@ -20,7 +20,7 @@ args = parser.parse_args()
 # Here we're checking to see if any CLI arguments were passed before execution. If none were passed, then we follow through with the default state.
 
 try: 
-        if args.Backup:
+        if args.fullBackup:
                 functions.fullBackup()
         elif args.dbBackup:
                 functions.dbBackup()
@@ -30,7 +30,7 @@ try:
                 functions.transferBackup()
         elif args.Setup:
                 functions.serverSetup()
-        elif args.Restore:
+        elif args.fullRestore:
                 functions.fullRestore()
         elif args.dbRestore:
                 functions.dbRestore()
