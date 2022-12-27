@@ -49,7 +49,7 @@ try:
                 print('\t 5: Server Setup\n')
                 print('\t 6: Restore Full Backup')
                 print('\t 7: Restore Database')
-                print('\t 8: Restore Website')
+                print('\t 8: Restore Website\n')
                 print('\t 9: Exit \n')
 
                 response = input('\t Please input your selection as a number: ')
