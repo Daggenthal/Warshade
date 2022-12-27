@@ -9,5 +9,5 @@ Originally I had written this in Bash, but re-wrote it in Python3 to add a Main 
   alt="Example"
   title="Warshade in action"
   style="display: inline-block; margin: 0 auto"
-  width="40%"
-  height="40%">
+  width="70%"
+  height="70%">
