@@ -495,18 +495,15 @@ def transferBackup():
 			files = os.listdir('/tmp/')
 
 			# Print out a numbered list of files
+			try:
 
-			for index, file in enumerate(files):
+				for index, file in enumerate(files):
+					
+					if file.endswith(".tar.gz" or ".sql"):
+						print(f"{index+1}. {file}\n")
+			except:
+				print("\n\tNo files with the extensions of '.tar.gz' or '.sql' exist in /tmp/\n\t Please check it or move files there. Exiting now...\t")
 				
-				if file.endswith(".tar.gz" or ".sql"):
-					print(f"{index+1}. {file}\n")
-
-				else:
-					print("\n\t No files with the extensions of '.tar.gz', '.sql', exist in /tmp/\n\t Please check the directory and try it again, exiting now...\n")
-					sleep(2.5)
-					exit()
-
-
 			# Get the user's input
 
 			selection = int(input('Enter the number of the file you wish to select: '))
