@@ -498,8 +498,14 @@ def transferBackup():
 
 			for index, file in enumerate(files):
 				
-				if file.endswith(".tar.gz"):
+				if file.endswith(".tar.gz" or ".sql"):
 					print(f"{index+1}. {file}\n")
+
+				else:
+					print("\n\t No files with the extensions of '.tar.gz', '.sql', exist in /tmp/\n\t Please check the directory and try it again, exiting now...\n")
+					sleep(2.5)
+					exit()
+
 
 			# Get the user's input
 
@@ -642,7 +648,6 @@ def fullRestore():
 		print('\t Attempting to decompress the file, please wait...\n\t')
 		sleep(2)
 
-		#run(['cd /tmp/ && sudo pv ServerBackup.tar.gz | tar -xz'], shell=True, check=True)
 		run(['cd /tmp/ && sudo pv ' + output_file + ' | tar -xz'], shell=True, check=True)
 		sleep(3)
 		run(['clear'], shell=True)
