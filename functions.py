@@ -115,25 +115,14 @@ def dbBackup():
 		# Use the information we've gathered earlier, and CD into the specific user directory that this is being ran inside of. If we did this in /tmp/, we'd have to make a folder there and constantly check for it.
 		# Instead, we're just storing it in their /Documents/ folder, as that is >typically< created upon user account creation.
 		# We finalzie this process by tagging the Year, Month, and Day of DB creation so we can select which one to recover from later.
+		
+		run(["cd /tmp/ && mysqldump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
 
-		while True:
+		# Clear the screen upon completion, and tell the user that it has finished successfully.
 
-			try:
-
-				run(["cd /tmp/ && mysqldump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
-
-				# Clear the screen upon completion, and tell the user that it has finished successfully.
-
-				run(["clear"], shell=True)
-				print('\n\t The Database was successfully backed up. The default location is in /home/$USER/Documents/')
-				exit()
-
-			except:
-
-				# Display why an issue may've occurred.
-
-				print('\n\t The Database was unable to be backed up properly. Please read the error above to try and correct it.')
-				exit()
+		run(["clear"], shell=True)
+		print('\n\t The Database was successfully backed up. The default location is in /home/$USER/Documents/')
+		exit()
 
 
 
@@ -500,12 +489,14 @@ def transferBackup():
 
 				for index, file in enumerate(files):
 					
-					if file.endswith(".tar.gz" and ".sql"):
+					if file.endswith('.tar.gz'):
 						print(f"{index+1}. {file}\n")
 
 			except:
 
-				print("\n\tNo files with the extensions of '.tar.gz' or '.sql' exist in /tmp/\n Please check it or move files there. Exiting now...\n")
+				print("\n\tNo files with the extension of '.tar.gz' exists in /tmp/\n Please check it or move files there. Exiting now...\n")
+				sleep(2.5)
+				exit()
 				
 			# Get the user's input
 
