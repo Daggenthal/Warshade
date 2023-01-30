@@ -781,7 +781,7 @@ def fullRestore():
 
 			if response == '1':
 
-				run(['sudo mysql_secure_installation'], shell=True, check=True)
+				run(['sudo mariadb-secure-installation'], shell=True, check=True)
 
 				userName = input('\n\t Please enter your mariaDB username: ')
 
