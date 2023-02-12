@@ -305,10 +305,7 @@ def webRestore():
 
 			if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-				run(['sudo systemctl stop nginx'], shell=True, check=True)
-				run(['sudo systemctl stop postfix'], shell=True, check=True)
-				run(['sudo systemctl stop mariadb'], shell=True, check=True)
-				run(['sudo systemctl stop memcached.service'], shell=True, check=True)
+				run(['sudo systemctl stop nginx postfix mariadb memcached.service'], shell=True, check=True)
 
 			# Turns out that in FreeBSD, services aren't auto-started once installed. Here, we enable to start on boot, but for now they'll stay turned off.
 			# Later on we'll actually start these.
@@ -341,10 +338,7 @@ def webRestore():
 
 			if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-				run(['cd /tmp/tmp/Backup/etc && sudo cp my.cnf /etc/'], shell=True, check=True)
-				run(['cd /tmp/tmp/Backup/etc && sudo cp php.ini /etc/'], shell=True, check=True)
-				run(['cd /tmp/tmp/Backup/etc && sudo cp -r nginx/ /etc/'], shell=True, check=True)
-				run(['cd /tmp/tmp/Backup/etc && sudo cp -r postfix/ /etc/'], shell=True, check=True)
+				run(['cd /tmp/tmp/Backup/etc && sudo rsync -avr * /etc/'], shell=True, check=True)
 
 			elif distro[6] in OS:
 
@@ -359,8 +353,7 @@ def webRestore():
 
 				# Now we'll finally move the directories that we want, back into their proper homes!
 
-				run(['cd /tmp/tmp/Backup/etc/ && sudo mv nginx/ /usr/local/etc/'], shell=True, check=True)
-				run(['cd /tmp/tmp/Backup/etc/ && sudo mv postfix/ /usr/local/etc/'], shell=True, check=True)
+				run(['cd /tmp/tmp/Backup/etc && sudo rsync -avr nginx/ postfix/ localhost:/usr/local/etc/'], shell=True, check=True)
 			
 			print('\t /etc/ folders have successfully been restored! Attempting website restore...\n\t')
 			sleep(1.25)
@@ -370,8 +363,7 @@ def webRestore():
 
 			if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-				run(['cd /usr/share/ && sudo mv nginx/ /tmp/'], shell=True)
-				run(['cd /tmp/tmp/Backup/usr && sudo cp -r nginx/ /usr/share/'], shell=True, check=True)
+				run(['cd /tmp/tmp/Backup/usr && sudo rsync -avr nginx/ /usr/share/'])
 
 			elif distro[6] in OS:
 
@@ -405,7 +397,7 @@ def webRestore():
 			
 			if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-				run(['cd /tmp/tmp/Backup/etc && sudo cp -r letsencrypt/ /etc/'], shell=True, check=True)
+				sleep(0.25)
 
 			elif distro[6] in OS:
 
@@ -421,17 +413,11 @@ def webRestore():
 
 			if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-				run(['sudo systemctl start nginx && sudo systemctl enable nginx'], shell=True, check=True)
-				run(['sudo systemctl start postfix && sudo systemctl enable postfix'], shell=True, check=True)
-				run(['sudo systemctl start mariadb && sudo systemctl enable mariadb'], shell=True, check=True)
-				run(['sudo systemctl start memcached.service && sudo systemctl enable memcached.service'], shell=True, check=True)
+				run(['sudo systemctl start nginx postfix mariadb memcached.service && sudo systemctl enable nginx postfix mariadb memcached.service'], shell=True, check=True)
 
 			elif distro[6] in OS:
 
-				run(['sudo service nginx start'], shell=True, check=True)
-				run(['sudo service postfix start'], shell=True, check=True)
-				run(['sudo service mysql-server start'], shell=True, check=True)
-				run(['sudo service memcached start'], shell=True, check=True)
+				run(['sudo service nginx postfix mysql-server memcached start'], shell=True, check=True)
 
 				# This line right here adds 'weekly_certbot_enable="YES"' to a file that we create, so certbot is checked weekly.
 				# We're also disabling sendmail, eventhough it's not present, due to enabling postfix prior in this script.
@@ -592,10 +578,7 @@ def fullRestore():
 
 		if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-			run(['sudo systemctl stop nginx'], shell=True, check=True)
-			run(['sudo systemctl stop postfix'], shell=True, check=True)
-			run(['sudo systemctl stop mariadb'], shell=True, check=True)
-			run(['sudo systemctl stop memcached.service'], shell=True, check=True)
+			run(['sudo systemctl stop nginx postfix mariadb memcached.service'], shell=True, check=True)
 
 		# Turns out that in FreeBSD, services aren't auto-started once installed. Here, we enable to start on boot, but for now they'll stay turned off.
 		# Later on we'll actually start these.
@@ -650,10 +633,7 @@ def fullRestore():
 
 		if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-			run(['cd /tmp/tmp/Backup/etc && sudo cp my.cnf /etc/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/etc && sudo cp php.ini /etc/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/etc && sudo cp -r nginx/ /etc/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/etc && sudo cp -r postfix/ /etc/'], shell=True, check=True)
+			run(['cd /tmp/tmp/Backup/etc && sudo rsync -avr * /etc/'], shell=True, check=True)
 
 		elif distro[6] in OS:
 
@@ -668,25 +648,21 @@ def fullRestore():
 
 			# Now we'll finally move the directories that we want, back into their proper homes!
 
-			run(['cd /tmp/tmp/Backup/etc/ && sudo mv nginx/ /usr/local/etc/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/etc/ && sudo mv postfix/ /usr/local/etc/'], shell=True, check=True)
+			run(['cd /tmp/tmp/Backup/etc && sudo rsync -avr nginx/ postfix/ localhost:/usr/local/etc'])
 		
 		print('\t /etc/ folders have successfully been restored! Attempting website restore...\n\t')
 		sleep(1.25)
 
 		# Now we're going to move the website and mail certs back to their origin.
-		# We move the folder that's created by nginx, to the /tmp/ directory, so we can install our own copy.
 
 		if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-			run(['cd /usr/share/ && sudo mv nginx/ /tmp/'], shell=True)
-			run(['cd /tmp/tmp/Backup/usr && sudo cp -r nginx/ /usr/share/'], shell=True, check=True)
+			run(['cd /tmp/tmp/Backup/usr && sudo rsync -avr nginx/ /usr/share'], shell=True, check=True)
 
 		elif distro[6] in OS:
 
 			run(['sudo mkdir /tmp/holding/'], shell=True, check=True)
-			run(['cd /usr/local/www/ && sudo rm -rf nginx/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/usr/ && sudo mv nginx/ /usr/local/www/'], shell=True, check=True)
+			run(['cd /tmp/tmp/Backup/usr/ && sudo rsync -avr nginx/ /usr/local/www/'], shell=True, check=True)
 
 		print('\t Website has successfully been restored! Attempting API key restore...\n\t')
 		sleep(1.25)
@@ -714,12 +690,11 @@ def fullRestore():
 		
 		if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-			run(['cd /tmp/tmp/Backup/etc && sudo cp -r letsencrypt/ /etc/'], shell=True, check=True)
+			sleep(0.25)
 
 		elif distro[6] in OS:
 
-			run(['cd /usr/local/etc/ && sudo mv letsencrypt/ /tmp/holding/'], shell=True, check=True)
-			run(['cd /tmp/tmp/Backup/etc && sudo mv letsencrypt/ /usr/local/etc/'], shell=True, check=True)
+			run(['cd /tmp/tmp/Backup/etc && sudo rsync -avr letsencrypt/ /usr/local/etc/'], shell=True, check=True)
 
 		print('\t SSL certs have successfully been restored!\n\t')
 		sleep(1.25)
@@ -730,17 +705,11 @@ def fullRestore():
 
 		if distro[0 or 1 or 2 or 3 or 4 or 5] in OS:
 
-			run(['sudo systemctl start nginx && sudo systemctl enable nginx'], shell=True, check=True)
-			run(['sudo systemctl start postfix && sudo systemctl enable postfix'], shell=True, check=True)
-			run(['sudo systemctl start mariadb && sudo systemctl enable mariadb'], shell=True, check=True)
-			run(['sudo systemctl start memcached.service && sudo systemctl enable memcached.service'], shell=True, check=True)
+			run(['sudo systemctl start nginx postfix mariadb memcached.service && sudo systemctl enable nginx postfix mariadb memcached.service'], shell=True, check=True)
 
 		elif distro[6] in OS:
 
-			run(['sudo service nginx start'], shell=True, check=True)
-			run(['sudo service postfix start'], shell=True, check=True)
-			run(['sudo service mysql-server start'], shell=True, check=True)
-			run(['sudo service memcached start'], shell=True, check=True)
+			run(['sudo service nginx postfix mysql-server memcached start'], shell=True, check=True)
 
 			# This line right here adds 'weekly_certbot_enable="YES"' to a file that we create, so certbot is checked weekly.
 			# We're also disabling sendmail, eventhough it's not present, due to enabling postfix prior in this script.
