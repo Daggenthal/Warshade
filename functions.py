@@ -47,7 +47,7 @@ def fullBackup():
 		
 		print('\n\t Backup initiated, this may take a bit and is active, please wait...\n')
 
-		run(['cd /tmp/Backup && mysqldump --user=' + userName + ' --password=' + passWord + ' --lock-tables --all-databases > server_db_backup.sql'], shell=True, check=True)
+		run(['cd /tmp/Backup && mariadb-dump --user=' + userName + ' --password=' + passWord + ' --lock-tables --all-databases > server_db_backup.sql'], shell=True, check=True)
 
 		print('\t Database has been backed up! Backing up /etc/...\n')
 
@@ -116,7 +116,7 @@ def dbBackup():
 		# Instead, we're just storing it in their /Documents/ folder, as that is >typically< created upon user account creation.
 		# We finalzie this process by tagging the Year, Month, and Day of DB creation so we can select which one to recover from later.
 		
-		run(["cd /tmp/ && mysqldump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
+		run(["cd /tmp/ && mariadb-dump --user=" + userName + " --password=" + passWord + " --lock-tables --all-databases > $(date '+%Y-%m-%d').sql"], shell=True, check=True)
 
 		# Clear the screen upon completion, and tell the user that it has finished successfully.
 
